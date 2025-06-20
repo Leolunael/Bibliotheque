@@ -31,4 +31,18 @@ class ReviewsRepository implements IReviewsRepository
         $deleteResult = $this->collection->deleteMany([]);
         return $deleteResult->getDeletedCount();
     }
+
+    public function calculerMoyenneNote(): ?float
+    {
+        $pipeline = [
+            '$group' => [
+                '_id' => null,
+                'moyenne' => ['$avg' => '$note']
+            ]
+        ];
+
+        $result = $this->collection->aggregate($pipeline)->toArray();
+         return $result[0]['moyenne']??null;
+    }
+
 }
